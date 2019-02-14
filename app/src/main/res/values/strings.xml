@@ -3,4 +3,15 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="key_binding_default_toolbar_name">Default toolbar</string>
+
+    <string name="error_no_internet_connection">Connection Error</string>
+    <!--Back Press-->
+    <string name="main_back_press">Back Press</string>
+
+    <string name="ScrollingAppBarLayoutBehavior">com.fb.roottest.base.paralax.ScrollingAppBarLayoutBehavior</string>
+    <string name="BackDropBottomSheetBehavior">com.fb.roottest.base.paralax.BackdropBottomSheetBehavior</string>
+    <string name="BottomSheetBehaviorGoogleMapsLike">com.fb.roottest.base.paralax.BottomSheetBehaviorGoogleMapsLike</string>
+    <string name="MergedAppBarLayoutBehavior">com.fb.roottest.base.paralax.MergedAppBarBehavior</string>
+    <string name="ScrollAwareFABBehavior">com.mahc.custombottomsheetbehavior.ScrollAwareFABBehavior</string>
 </resources>
