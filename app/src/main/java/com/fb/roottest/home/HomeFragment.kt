@@ -41,7 +41,7 @@ class HomeFragment : Fragment() {
         val actionBar =  (activity as MainActivity).getSupportActionBar()
         actionBar?.let{
             it.setDisplayHomeAsUpEnabled(true)
-            it.setTitle("")
+            it.setTitle("Default Title")
         }
         val behavior = BottomSheetBehaviorGoogleMapsLike.from(binding.bottomSheet)
         behavior.addBottomSheetCallback(callback)

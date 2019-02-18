@@ -102,7 +102,7 @@ class ScrollAwareFABBehavior(context: Context, attrs: AttributeSet) : FloatingAc
             return 0
 
         return if (dependency.getY() - child.y > child.height)
-            Math.max(0, (dependency.getY() - child.height / 2 - child.y) as Int)
+            Math.max(0, (dependency.getY() - child.height / 2 - child.y).toInt())
         else
             0
     }

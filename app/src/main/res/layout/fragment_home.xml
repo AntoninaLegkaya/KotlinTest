@@ -29,16 +29,13 @@
                     android:layout_height="?attr/actionBarSize"
                     app:popupTheme="@style/AppTheme.PopupOverlay"/>
         </com.google.android.material.appbar.AppBarLayout>
-
         <androidx.viewpager.widget.ViewPager
                 android:id="@+id/pager"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/anchor_point"
-                android:background="@color/colorAccent"
                 app:layout_behavior="@string/BackDropBottomSheetBehavior"
                 android:fitsSystemWindows="true">
         </androidx.viewpager.widget.ViewPager>
-
         <androidx.core.widget.NestedScrollView
                 android:id="@+id/bottom_sheet"
                 android:layout_width="match_parent"
@@ -48,13 +45,10 @@
                 app:layout_behavior="@string/BottomSheetBehaviorGoogleMapsLike"
                 app:anchorPoint="@dimen/anchor_point"
                 app:behavior_hideable="false"
-                android:background="#ff0000"
                 android:fitsSystemWindows="true">
 
             <include
                     layout="@layout/layout_bottom_sheet"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
                     android:fitsSystemWindows="true"/>
         </androidx.core.widget.NestedScrollView>
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -64,19 +58,9 @@
                 app:layout_anchorGravity="top|right|end"
                 android:src="@drawable/ic_action_go"
                 android:layout_margin="@dimen/fab_margin"
+                app:layout_behavior="@string/ScrollAwareFABBehavior"
                 android:clickable="true"
                 android:focusable="true"/>
-
-        <!--<com.google.android.material.floatingactionbutton.FloatingActionButton-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--app:layout_anchor="@id/bottom_sheet"-->
-        <!--app:layout_anchorGravity="top|right|end"-->
-        <!--android:src="@drawable/ic_action_go"-->
-        <!--android:layout_margin="@dimen/fab_margin"-->
-        <!--app:layout_behavior="@string/ScrollAwareFABBehavior"-->
-        <!--android:clickable="true"-->
-        <!--android:focusable="true"/>-->
 
         <com.fb.roottest.custom.MergedAppBarLayout
                 android:id="@+id/mergedappbarlayout"
