@@ -7,6 +7,9 @@
     <dimen name="anchor_point">300dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
+    <dimen name="guide_line_left">16dp</dimen>
+    <dimen name="guide_line_right">16dp</dimen>
+
     <!--Back SnackBar-->
     <dimen name="snack_bar_padding_start">15dp</dimen>
     <dimen name="snack_bar_margin">10dp</dimen>

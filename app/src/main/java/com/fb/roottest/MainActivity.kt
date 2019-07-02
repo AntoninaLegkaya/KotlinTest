@@ -3,19 +3,16 @@ package com.fb.roottest
 import android.os.Bundle
 import android.os.Handler
 import android.os.PersistableBundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
 import com.fb.roottest.base.IOnBackPressed
+import com.fb.roottest.base.ViewModelFactory
 import com.fb.roottest.databinding.ActivityMainBinding
-import com.fb.roottest.util.observeCommand
 import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
@@ -26,7 +23,9 @@ class MainActivity : AppCompatActivity() {
     )
     private lateinit var appBarConfig: AppBarConfiguration
     private val navController by lazy { findNavController(R.id.nav_host_fragment) }
-    private val viewModel by lazy { ViewModelProviders.of(this).get(MainActivityViewModel::class.java) }
+    private val viewModel by lazy {
+        ViewModelProviders.of(this, ViewModelFactory.getInstance(application)).get(MainActivityViewModel::class.java)
+    }
 
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {

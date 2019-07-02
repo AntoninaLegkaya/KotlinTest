@@ -18,4 +18,13 @@
     <!--Home Screen-->
     <string name="home_bottom_sheet_title">Expand panel title</string>
     <string name="home_bottom_sheet_content">Some content...</string>
+    <string name="hint_purchase">Purchase</string>
+    <string name="hint_cost_purchase">Purchase cost</string>
+    <string name="hint_count_purchase">Count</string>
+
+    <!--Purchase Input State hints-->
+    <string name="purchase_error_input_state">Wrong purchase name</string>
+    <string name="purchase_cost_error_input_state">Wrong purchase cost</string>
+    <string name="purchase_count_error_input_state">Wrong purchase count</string>
+    <string name="purchase_add_button">Add purchase</string>
 </resources>

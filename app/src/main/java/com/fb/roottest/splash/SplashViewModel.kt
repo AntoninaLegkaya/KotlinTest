@@ -3,12 +3,13 @@ package com.fb.roottest.splash
 import android.app.Application
 import com.fb.roottest.base.BaseViewModel
 import com.fb.roottest.base.SingleLiveEvent
+import com.fb.roottest.data.repository.Repository
 import java.util.Timer
 import kotlin.concurrent.schedule
 
 const val DELAY = 750L
 
-class SplashViewModel(application: Application) : BaseViewModel(application) {
+class SplashViewModel(application: Application, repository: Repository) : BaseViewModel(application, repository) {
 
     val navigateHomeFragment = SingleLiveEvent<Unit>()
 
