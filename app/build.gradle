@@ -1,9 +1,27 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
+apply plugin: "androidx.navigation.safeargs"
+apply plugin: 'kotlin-kapt'
+apply plugin: "org.jlleitschuh.gradle.ktlint"
 
+def isNeedCrashlyticsDistribution = false
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url 'https://maven.fabric.io/public' }
+        google()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.4.1'
+        classpath 'io.fabric.tools:gradle:1.27.0'
+        classpath "org.jlleitschuh.gradle:ktlint-gradle:6.3.1"
+        classpath 'io.fabric.tools:gradle:1.27.0'
+    }
+}
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -19,16 +37,103 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            applicationIdSuffix ".debug"
+
+        }
+    }
+    dataBinding {
+        enabled = true
+    }
+
+    applicationVariants.all { variant ->
+        variant.assemble.doLast {
+            if (isNeedCrashlyticsDistribution) {
+                if ("debug" == variant.buildType.name) {
+                    //crashlyticsUploadDistributionDebug.execute()
+                } else if ("release" == variant.buildType.name) {
+                    // crashlyticsUploadDistributionRelease.execute()
+                }
+            }
+        }
+    }
+}
+androidExtensions {
+    experimental = true
+}
+dependencies {
+
+    def nav_version = "1.0.0-beta01"
+    def glide_version = "4.8.0"
+    def retrofit_version = "2.4.0"
+    def kotlin_coroutines = "1.0.1"
+    def googlePlayVersion = "16.0.0"
+    def googlePlayAnalyticsVersion = "16.0.7"
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    kapt 'com.android.databinding:compiler:3.1.4'
+    // ViewModel and LiveData
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    // navigation
+    implementation "android.arch.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "android.arch.navigation:navigation-ui-ktx:$nav_version"
+    // Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.12.0'
+    // ktx
+    implementation 'androidx.core:core-ktx:1.0.1'
+    // coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines"
+    // Glide
+    implementation "com.github.bumptech.glide:glide:$glide_version"
+    kapt "com.github.bumptech.glide:compiler:$glide_version"
+    //tests
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    implementation 'com.android.support:design:28.0.0-alpha3'
+    implementation 'com.google.android.material:material:1.0.0-alpha3'
+
+    // Room
+    implementation "android.arch.persistence.room:runtime:1.1.1"
+    kapt "android.arch.persistence.room:compiler:1.1.1"
+
+    // Lifecycle components
+    implementation 'android.arch.lifecycle:extensions:1.1.1'
+    annotationProcessor 'android.arch.lifecycle:compiler:1.1.1'
+    implementation 'android.arch.navigation:navigation-fragment:1.0.0'
+
+}
+
+task increaseVersionCode {
+    doLast {
+        def code = getVerCode()
+        project.logger.debug("code >> " + code)
+        File versionPropsFile = file('version.properties')
+        Properties versionProps = new Properties()
+        try {
+            versionProps.load(new FileInputStream(versionPropsFile))
+            if (versionPropsFile.canWrite()) {
+                versionProps['VERSION_CODE'] = (code + 1).toString()
+                versionProps.store(versionPropsFile.newWriter(), null)
+            }
+        } catch (e) {
+            logger.debug(e.getLocalizedMessage())
+        }
     }
 }
 
-dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support:design:28.0.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+allprojects {
+    gradle.projectsEvaluated {
+        tasks.withType(JavaCompile) {
+            options.compilerArgs << "-Xmaxerrs" << "5000"
+        }
+    }
 }

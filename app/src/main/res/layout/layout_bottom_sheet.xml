@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical">
+
+    <data>
+
+        <variable
+                name="viewModel"
+                type="com.fb.roottest.home.HomeViewModel"/>
+        <variable name="listener" type="com.fb.roottest.home.PurchaseClickListener"/>
+
+    </data>
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/layout_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/color_white">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="720dp">
+            <LinearLayout
+                    android:id="@+id/panel_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/bottom_sheet_peek_height"
+                    android:background="@color/color_bg_main"
+                    android:layout_gravity="center"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/tl_input"
+                    android:gravity="center_vertical|center_horizontal">
+                <TextView
+                        android:layout_gravity="center_vertical"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:text="@string/home_bottom_sheet_title"
+                        android:textColor="@color/color_white"
+                        android:textSize="20sp"/>
+            </LinearLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tl_input"
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    inputState="@{viewModel.purchaseInputState}"
+                    style="@style/TextInputLayoutAppearance"
+                    app:layout_constraintStart_toStartOf="@+id/left"
+                    app:layout_constraintEnd_toEndOf="@+id/right"
+                    app:layout_constraintTop_toBottomOf="@+id/panel_title">
+                <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/namePurchaseEditText"
+                        style="@style/EditTextPrimary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:afterTextChanged="@{(s) -> listener.onNamePurchaseTextChanged(s.toString())}"
+                        android:hint="@string/hint_purchase"
+                        android:inputType="text"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tl__cost_input"
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    inputState="@{viewModel.costInputState}"
+                    style="@style/TextInputLayoutAppearance"
+                    app:layout_constraintStart_toStartOf="@+id/left"
+                    app:layout_constraintEnd_toEndOf="@+id/right"
+                    app:layout_constraintTop_toBottomOf="@+id/tl_input">
+                <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/costPurchaseEditText"
+                        style="@style/EditTextPrimary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:afterTextChanged="@{(s) -> listener.onCostPurchaseTextChanged(s.toString())}"
+                        android:hint="@string/hint_cost_purchase"
+                        android:inputType="numberDecimal"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tl__count_input"
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    style="@style/TextInputLayoutAppearance"
+                    inputState="@{viewModel.countInputState}"
+                    app:layout_constraintStart_toStartOf="@+id/left"
+                    app:layout_constraintEnd_toEndOf="@+id/right"
+                    app:layout_constraintTop_toBottomOf="@+id/tl__cost_input">
+                <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/countPurchaseEditText"
+                        style="@style/EditTextPrimary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:afterTextChanged="@{(s) -> listener.onCountPurchaseTextChanged(s.toString())}"
+                        android:hint="@string/hint_count_purchase"
+                        android:inputType="numberDecimal"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tl__count_input"
+                    android:onClick="@{v->listener.insertPurchase()}"
+                    android:enabled="@{safeUnbox(viewModel.isInsertButtonEnabled)}"
+                    android:text="@string/purchase_add_button"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_begin="@dimen/guide_line_left"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_end="@dimen/guide_line_right"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.bottomappbar.BottomAppBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:fabAlignmentMode="center"
+                android:id="@+id/bottom_app_bar"
+                android:layout_gravity="bottom"
+                android:gravity="center_vertical"
+                android:padding="16dp"
+                app:backgroundTint="@color/colorPrimary"
+                app:navigationIcon="@drawable/ic_baseline_menu_24px"/>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_notifications_black_24dp"
+                app:layout_anchor="@id/bottom_app_bar"/>
+
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+</layout>

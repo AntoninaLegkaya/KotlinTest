@@ -3,4 +3,28 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="key_binding_default_toolbar_name">Default toolbar</string>
+
+    <string name="error_no_internet_connection">Connection Error</string>
+    <!--Back Press-->
+    <string name="main_back_press">Back Press</string>
+    <!--Behavior-->
+    <string name="ScrollingAppBarLayoutBehavior">com.fb.roottest.base.paralax.ScrollingAppBarLayoutBehavior</string>
+    <string name="BackDropBottomSheetBehavior">com.fb.roottest.base.paralax.BackdropBottomSheetBehavior</string>
+    <string name="BottomSheetBehaviorGoogleMapsLike">com.fb.roottest.base.paralax.BottomSheetBehaviorGoogleMapsLike
+    </string>
+    <string name="MergedAppBarLayoutBehavior">com.fb.roottest.base.paralax.MergedAppBarBehavior</string>
+    <string name="ScrollAwareFABBehavior">com.fb.roottest.base.paralax.ScrollAwareFABBehavior</string>
+    <!--Home Screen-->
+    <string name="home_bottom_sheet_title">Expand panel title</string>
+    <string name="home_bottom_sheet_content">Some content...</string>
+    <string name="hint_purchase">Purchase</string>
+    <string name="hint_cost_purchase">Purchase cost</string>
+    <string name="hint_count_purchase">Count</string>
+
+    <!--Purchase Input State hints-->
+    <string name="purchase_error_input_state">Wrong purchase name</string>
+    <string name="purchase_cost_error_input_state">Wrong purchase cost</string>
+    <string name="purchase_count_error_input_state">Wrong purchase count</string>
+    <string name="purchase_add_button">Add purchase</string>
 </resources>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical">
+    <data>
+
+        <variable
+                name="viewModel"
+                type="com.fb.roottest.home.HomeViewModel" />
+        <variable name="listener" type="com.fb.roottest.home.PurchaseClickListener"/>
+
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/coordinatorlayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true">
+
+        <FrameLayout
+                android:id="@+id/dummy_framelayout_replacing_map"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/darker_gray"
+                android:fitsSystemWindows="true"/>
+
+        <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/appbarlayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/AppTheme.AppBarOverlay"
+                app:layout_behavior="@string/ScrollingAppBarLayoutBehavior">
+
+            <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:popupTheme="@style/AppTheme.PopupOverlay"/>
+        </com.google.android.material.appbar.AppBarLayout>
+        <androidx.viewpager.widget.ViewPager
+                android:id="@+id/pager"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/anchor_point"
+                app:layout_behavior="@string/BackDropBottomSheetBehavior"
+                android:fitsSystemWindows="true">
+        </androidx.viewpager.widget.ViewPager>
+        <androidx.core.widget.NestedScrollView
+                android:id="@+id/bottom_sheet"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:behavior_peekHeight="@dimen/bottom_sheet_peek_height"
+                app:layout_behavior="@string/BottomSheetBehaviorGoogleMapsLike"
+                app:anchorPoint="@dimen/anchor_point"
+                app:behavior_hideable="false"
+                android:fitsSystemWindows="true">
+
+            <include
+                    android:id="@+id/input_sheet"
+                    layout="@layout/layout_bottom_sheet"
+                    viewModel="@{viewModel}"
+                    listener="@{listener}"
+                    android:fitsSystemWindows="true"/>
+        </androidx.core.widget.NestedScrollView>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_insert_purchase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_anchor="@id/bottom_sheet"
+                app:layout_anchorGravity="top|right|end"
+                android:src="@drawable/ic_action_go"
+                android:layout_margin="@dimen/fab_margin"
+                app:layout_behavior="@string/ScrollAwareFABBehavior"
+                android:onClick="@{v->listener.insertPurchase()}"
+                android:enabled="@{safeUnbox(viewModel.isInsertButtonEnabled)}"
+                android:clickable="true"
+                android:focusable="true"/>
+
+        <com.fb.roottest.custom.MergedAppBarLayout
+                android:id="@+id/mergedappbarlayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_behavior="@string/MergedAppBarLayoutBehavior"/>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</layout>
