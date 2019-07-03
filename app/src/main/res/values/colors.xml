@@ -15,4 +15,6 @@
     <color name="colorControlActivated">@color/colorAccent</color>
     <color name="colorHintFocused">@color/colorAccent</color>
     <color name="colorHintUnfocused">@color/black_60</color>
+    <color name="colorBgCard">#FCFFC9</color>
+    <color name="colorTextCard">#ff207d94</color>
 </resources>

@@ -26,6 +26,7 @@
                     android:layout_height="@dimen/bottom_sheet_peek_height"
                     android:background="@color/color_bg_main"
                     android:layout_gravity="center"
+                    android:layout_marginBottom="@dimen/top_margin"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toTopOf="@+id/tl_input"
@@ -98,13 +99,30 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button
+                    android:id="@+id/btn_add_purchase"
                     android:layout_width="wrap_content" android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tl__count_input"
+                    android:layout_marginTop="@dimen/top_margin"
                     android:onClick="@{v->listener.insertPurchase()}"
                     android:enabled="@{safeUnbox(viewModel.isInsertButtonEnabled)}"
                     android:text="@string/purchase_add_button"/>
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvList"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="@dimen/top_margin"
+                    android:adapter="@{viewModel.adapter}"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintStart_toStartOf="@+id/tl_input"
+                    app:layout_constraintEnd_toEndOf="@+id/tl_input"
+                    app:layout_constraintTop_toBottomOf="@+id/btn_add_purchase"
+                    android:visibility="invisible">
+
+            </androidx.recyclerview.widget.RecyclerView>
 
             <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/left"

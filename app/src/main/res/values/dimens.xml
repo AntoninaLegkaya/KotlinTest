@@ -6,6 +6,7 @@
     <dimen name="bottom_sheet_peek_height">80dp</dimen>
     <dimen name="anchor_point">300dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="top_margin">16dp</dimen>
 
     <dimen name="guide_line_left">16dp</dimen>
     <dimen name="guide_line_right">16dp</dimen>

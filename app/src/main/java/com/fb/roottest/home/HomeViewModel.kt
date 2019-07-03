@@ -1,7 +1,6 @@
 package com.fb.roottest.home
 
 import android.app.Application
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
@@ -10,6 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import com.fb.roottest.R
 import com.fb.roottest.base.BaseViewModel
 import com.fb.roottest.base.combineWith
+import com.fb.roottest.custom.CarouselAdapter
 import com.fb.roottest.data.ResultQuery
 import com.fb.roottest.data.db.Purchase
 import com.fb.roottest.data.repository.Repository
@@ -20,6 +20,10 @@ class HomeViewModel(application: Application, repository: Repository) : BaseView
     val _isPurchaseNameValid = MediatorLiveData<Boolean>()
     val _isCostPurchaseValid = MediatorLiveData<Boolean>()
     val _isCountPurchaeValid = MediatorLiveData<Boolean>()
+
+    val adapter = PurchaseListAdapter()
+    val carouselAdapter= CarouselAdapter()
+
 
     private val _isInsertButtonEnabled: MutableLiveData<Boolean> =
         _isPurchaseNameValid.combineWith(_isCostPurchaseValid) { nameValid, costValid ->
@@ -48,15 +52,15 @@ class HomeViewModel(application: Application, repository: Repository) : BaseView
         .handleSuccess {
             it.getResult()?.run {
                 if (this.isEmpty()) {
-                    Log.d("devcpp","List empty")
+                    isListEmpty.set(true)
+                    adapter.setItems(emptyList<Purchase>().toMutableList())
+                    carouselAdapter.setItems(emptyList<Purchase>().toMutableList())
+                    carouselAdapter.notifyDataSetChanged()
+                } else {
+                    adapter.setItems(this as MutableList<Purchase>)
+                    carouselAdapter.setItems(this)
+                    carouselAdapter.notifyDataSetChanged()
                     isListEmpty.set(false)
-                } else{
-                  for (purchase in this){
-                      Log.d("devcpp", "Purchase: "+ purchase.purchase+ "\n"+
-                              "Count: "+ purchase.count+ "\n"+
-                              "Cost: "+ purchase.cost)
-                  }
-
                 }
             }
         }
@@ -112,8 +116,9 @@ class HomeViewModel(application: Application, repository: Repository) : BaseView
     }
 
     fun getPurchases() {
-        purchaseData= repository.getAllPurchase()
+        purchaseData = repository.getAllPurchase()
     }
+
 
     override fun onCleared() {
         super.onCleared()

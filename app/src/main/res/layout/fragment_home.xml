@@ -6,7 +6,7 @@
 
         <variable
                 name="viewModel"
-                type="com.fb.roottest.home.HomeViewModel" />
+                type="com.fb.roottest.home.HomeViewModel"/>
         <variable name="listener" type="com.fb.roottest.home.PurchaseClickListener"/>
 
     </data>
@@ -22,7 +22,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@android:color/darker_gray"
-                android:fitsSystemWindows="true"/>
+                android:fitsSystemWindows="true">
+            <com.camerakit.CameraKitView
+                    android:id="@+id/camera"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="54dp"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:keepScreenOn="true"
+                    app:camera_flash="auto"
+                    app:camera_facing="back"
+                    app:camera_focus="continuous"
+                    app:camera_permissions="camera"/>
+        </FrameLayout>
 
         <com.google.android.material.appbar.AppBarLayout
                 android:id="@+id/appbarlayout"
@@ -41,6 +53,7 @@
                 android:id="@+id/pager"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/anchor_point"
+                android:adapter="@{viewModel.carouselAdapter}"
                 app:layout_behavior="@string/BackDropBottomSheetBehavior"
                 android:fitsSystemWindows="true">
         </androidx.viewpager.widget.ViewPager>
@@ -54,7 +67,6 @@
                 app:anchorPoint="@dimen/anchor_point"
                 app:behavior_hideable="false"
                 android:fitsSystemWindows="true">
-
             <include
                     android:id="@+id/input_sheet"
                     layout="@layout/layout_bottom_sheet"
@@ -71,8 +83,7 @@
                 android:src="@drawable/ic_action_go"
                 android:layout_margin="@dimen/fab_margin"
                 app:layout_behavior="@string/ScrollAwareFABBehavior"
-                android:onClick="@{v->listener.insertPurchase()}"
-                android:enabled="@{safeUnbox(viewModel.isInsertButtonEnabled)}"
+                android:onClick="@{v->listener.scanCard()}"
                 android:clickable="true"
                 android:focusable="true"/>
 

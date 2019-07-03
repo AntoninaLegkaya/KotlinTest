@@ -44,4 +44,15 @@
         <item name="android:maxLines">1</item>
     </style>
 
+    <style name="title1TextStyle" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/color_black</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="bodyTextStyle" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/color_black</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
 </resources>

@@ -1,5 +1,9 @@
 package com.fb.roottest.util
 
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 import com.fb.roottest.base.ViewModelFactory
@@ -15,6 +19,11 @@ fun <T : ViewModel> Fragment.obtainViewModel(clazz: Class<T>): T {
         obtainViewModel(ViewModelFactory.getInstance(application), clazz)
     } ?: throw IllegalStateException(OBTAIN_VIEWMODEL_EXCEPTION_MESSAGE)
 }
+
 fun <VM : ViewModel> Fragment.obtainViewModel(factory: ViewModelProvider.Factory?, cls: Class<VM>): VM {
     return ViewModelProviders.of(this, factory).get(cls)
+}
+
+fun ViewGroup.inflateView(@LayoutRes layout: Int): View {
+    return LayoutInflater.from(this.context).inflate(layout, this, false)
 }

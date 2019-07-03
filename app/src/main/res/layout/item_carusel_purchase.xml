@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+                name="viewModel"
+                type="com.fb.roottest.home.PurchaseViewModel"/>
+
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/anchor_point"
+            android:background="@drawable/shape_ractangle">
+
+        <ImageView
+                android:id="@+id/dragLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                   android:src="@drawable/ic_chevron_left_black_24dp"
+                   app:layout_constraintStart_toStartOf="parent"
+                   app:layout_constraintTop_toTopOf="parent"
+                   app:layout_constraintBottom_toBottomOf="parent" />
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/titleNamePurchase"
+                style="@style/title1TextStyle"
+                android:layout_marginStart="@dimen/top_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorTextCard"
+                android:textAlignment="center"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="@+id/titleCostPurchase"
+                app:layout_constraintStart_toEndOf="@+id/dragLeft"
+                android:text="@string/item_title_purchase_name"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/titleCountPurchase"
+                style="@style/title1TextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textColor="@color/colorTextCard"
+                app:layout_constraintTop_toTopOf="@+id/titleNamePurchase"
+                app:layout_constraintBottom_toBottomOf="@+id/titleCostPurchase"
+                app:layout_constraintStart_toStartOf="@+id/titleNamePurchase"
+                android:text="@string/item_title_purchase_count"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/titleCostPurchase"
+                style="@style/title1TextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:textColor="@color/colorTextCard"
+                app:layout_constraintTop_toBottomOf="@+id/titleCountPurchase"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/titleNamePurchase"
+                android:textAlignment="center"
+                android:text="@string/item_title_purchase_cost"/>
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/namePurchase"
+                style="@style/bodyTextStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/top_margin"
+                app:layout_constraintStart_toEndOf="@id/titleNamePurchase"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="@+id/titleCostPurchase"
+                android:layout_marginStart="@dimen/top_margin"
+                app:layout_constraintEnd_toStartOf="@+id/dragRight"
+                android:text="@{viewModel.name}"
+                tools:text="name"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/countPurchase"
+                style="@style/bodyTextStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/top_margin"
+                app:layout_constraintEnd_toStartOf="@+id/dragRight"
+                app:layout_constraintStart_toStartOf="@id/namePurchase"
+                app:layout_constraintTop_toTopOf="@id/titleNamePurchase"
+                app:layout_constraintBottom_toBottomOf="@+id/titleCostPurchase"
+                android:text="@{viewModel.count}"
+                tools:text="count"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/costPurchase"
+                style="@style/bodyTextStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/top_margin"
+                app:layout_constraintEnd_toStartOf="@+id/dragRight"
+                app:layout_constraintStart_toStartOf="@id/countPurchase"
+                app:layout_constraintTop_toBottomOf="@+id/countPurchase"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:text="@{viewModel.cost}"
+                tools:text="cost"/>
+
+
+        <ImageView
+                android:id="@+id/dragRight"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_chevron_right_black_24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
