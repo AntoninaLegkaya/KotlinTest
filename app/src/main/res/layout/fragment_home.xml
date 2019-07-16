@@ -21,19 +21,26 @@
                 android:id="@+id/dummy_framelayout_replacing_map"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@android:color/darker_gray"
+                android:background="@color/white_50"
                 android:fitsSystemWindows="true">
-            <com.camerakit.CameraKitView
-                    android:id="@+id/camera"
-                    android:layout_width="match_parent"
+            <!--<com.camerakit.CameraKitView-->
+                    <!--android:id="@+id/camera"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_marginTop="54dp"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:adjustViewBounds="true"-->
+                    <!--android:keepScreenOn="true"-->
+                    <!--app:camera_flash="auto"-->
+                    <!--app:camera_facing="back"-->
+                    <!--app:camera_focus="continuous"-->
+                    <!--app:camera_permissions="camera"/>-->
+
+            <TextView
+                    android:id="@+id/tvScanInfo"
+                    style="@style/title1TextStyle"
                     android:layout_marginTop="54dp"
-                    android:layout_height="wrap_content"
-                    android:adjustViewBounds="true"
-                    android:keepScreenOn="true"
-                    app:camera_flash="auto"
-                    app:camera_facing="back"
-                    app:camera_focus="continuous"
-                    app:camera_permissions="camera"/>
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
         </FrameLayout>
 
         <com.google.android.material.appbar.AppBarLayout

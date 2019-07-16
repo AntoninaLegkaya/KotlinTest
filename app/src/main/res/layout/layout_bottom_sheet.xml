@@ -43,6 +43,7 @@
                     android:id="@+id/tl_input"
                     android:layout_height="wrap_content"
                     android:layout_width="0dp"
+                    android:layout_marginTop="@dimen/top_margin"
                     inputState="@{viewModel.purchaseInputState}"
                     style="@style/TextInputLayoutAppearance"
                     app:layout_constraintStart_toStartOf="@+id/left"
@@ -58,15 +59,39 @@
                         android:inputType="text"/>
             </com.google.android.material.textfield.TextInputLayout>
 
+
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tl__count_input"
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_marginTop="@dimen/top_margin"
+                    style="@style/TextInputLayoutAppearance"
+                    inputState="@{viewModel.countInputState}"
+                    app:layout_constraintStart_toStartOf="@+id/left"
+                    app:layout_constraintEnd_toEndOf="@+id/right"
+                    app:layout_constraintTop_toBottomOf="@+id/tl_input">
+                <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/countPurchaseEditText"
+                        style="@style/EditTextPrimary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:afterTextChanged="@{(s) -> listener.onCountPurchaseTextChanged(s.toString())}"
+                        android:hint="@string/hint_count_purchase"
+                        android:inputType="numberDecimal"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
             <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tl__cost_input"
                     android:layout_height="wrap_content"
                     android:layout_width="0dp"
+                    android:layout_marginTop="@dimen/top_margin"
                     inputState="@{viewModel.costInputState}"
                     style="@style/TextInputLayoutAppearance"
                     app:layout_constraintStart_toStartOf="@+id/left"
                     app:layout_constraintEnd_toEndOf="@+id/right"
-                    app:layout_constraintTop_toBottomOf="@+id/tl_input">
+                    app:layout_constraintTop_toBottomOf="@+id/tl__count_input">
                 <androidx.appcompat.widget.AppCompatEditText
                         android:id="@+id/costPurchaseEditText"
                         style="@style/EditTextPrimary"
@@ -79,22 +104,23 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tl__count_input"
+                    android:id="@+id/tl__brand_input"
                     android:layout_height="wrap_content"
                     android:layout_width="0dp"
+                    android:layout_marginTop="@dimen/top_margin"
+                    inputState="@{viewModel.brandInputState}"
                     style="@style/TextInputLayoutAppearance"
-                    inputState="@{viewModel.countInputState}"
                     app:layout_constraintStart_toStartOf="@+id/left"
                     app:layout_constraintEnd_toEndOf="@+id/right"
                     app:layout_constraintTop_toBottomOf="@+id/tl__cost_input">
                 <androidx.appcompat.widget.AppCompatEditText
-                        android:id="@+id/countPurchaseEditText"
+                        android:id="@+id/brandPurchaseEditText"
                         style="@style/EditTextPrimary"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:afterTextChanged="@{(s) -> listener.onCountPurchaseTextChanged(s.toString())}"
-                        android:hint="@string/hint_count_purchase"
-                        android:inputType="numberDecimal"/>
+                        android:afterTextChanged="@{(s) -> listener.onBrandPurchaseTextChanged(s.toString())}"
+                        android:hint="@string/hint_brand_purchase"
+                        android:inputType="text"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -103,12 +129,25 @@
                     android:layout_width="wrap_content" android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tl__count_input"
-                    android:layout_marginTop="@dimen/top_margin"
-                    android:onClick="@{v->listener.insertPurchase()}"
+                    app:layout_constraintTop_toBottomOf="@+id/tl__brand_input"
+                    android:layout_marginTop="@dimen/top_margin_10dp"
+                    android:onClick="@{v->listener.insertData()}"
                     android:enabled="@{safeUnbox(viewModel.isInsertButtonEnabled)}"
                     android:text="@string/purchase_add_button"/>
 
+            <FrameLayout android:layout_width="0dp" android:layout_height="200dp"
+                         android:background="@drawable/shape_ractangle"
+                         android:layout_marginTop="@dimen/top_margin"
+                         app:layout_constraintStart_toStartOf="@+id/left"
+                         app:layout_constraintEnd_toEndOf="@+id/right"
+                         app:layout_constraintTop_toBottomOf="@+id/btn_add_purchase">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/photo"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"/>
+
+            </FrameLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvList"
@@ -120,7 +159,7 @@
                     app:layout_constraintStart_toStartOf="@+id/tl_input"
                     app:layout_constraintEnd_toEndOf="@+id/tl_input"
                     app:layout_constraintTop_toBottomOf="@+id/btn_add_purchase"
-                    android:visibility="invisible">
+                    android:visibility="visible">
 
             </androidx.recyclerview.widget.RecyclerView>
 
@@ -148,8 +187,9 @@
                 android:layout_gravity="bottom"
                 android:gravity="center_vertical"
                 android:padding="16dp"
+                app:menu="@menu/menu_scan"
                 app:backgroundTint="@color/colorPrimary"
-                app:navigationIcon="@drawable/ic_baseline_menu_24px"/>
+        />
         <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab"
                 android:layout_width="wrap_content"

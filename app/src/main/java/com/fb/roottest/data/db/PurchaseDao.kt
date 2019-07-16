@@ -1,5 +1,6 @@
 package com.fb.roottest.data.db
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.room.*
@@ -9,8 +10,9 @@ import kotlinx.coroutines.withContext
 interface PurchaseDao {
 
     @Transaction
-    open suspend fun insertPurchase(purchase: Purchase) {
-        insertPurchaseEntity(purchase)
+    open suspend fun insertPurchaseTransaction(purchase: Purchase) {
+        val id= insertPurchaseEntity(purchase)
+        Log.d("devcpp", "************PurchaseDao Insert new Purchase  id: "+ id +" *************** ")
     }
 
     @Transaction
@@ -29,7 +31,7 @@ interface PurchaseDao {
     }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertPurchaseEntity(purchase: Purchase)
+    fun insertPurchaseEntity(purchase: Purchase):Long
 
     @Query("DELETE FROM purchases")
     fun clearPurchases()

@@ -5,27 +5,25 @@
 
     </data>
 
-    <!--<androidx.constraintlayout.widget.ConstraintLayout-->
-            <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-            <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
-            <!--xmlns:tools="http://schemas.android.com/tools"-->
-            <!--android:id="@+id/container"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--&gt;-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
 
-        <!--<androidx.appcompat.widget.Toolbar-->
-                <!--android:id="@+id/toolbar"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:background="@color/color_bg_main"-->
-                <!--android:theme="@style/ToolbarTheme"-->
-                <!--app:layout_constraintEnd_toEndOf="parent"-->
-                <!--app:layout_constraintStart_toStartOf="parent"-->
-                <!--app:layout_constraintTop_toTopOf="parent"-->
-                <!--app:popupTheme="@style/AppTheme.PopupOverlay"-->
-                <!--app:title="@{viewModel.toolbarTitle}"-->
-                <!--tools:title="Title"/>-->
+        <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/color_bg_main"
+                android:theme="@style/ToolbarTheme"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                app:title="@{viewModel.toolbarTitle}"
+                tools:title="Title"/>
 
         <!-- We need this frame layout for toolbar visibility change animation-->
         <FrameLayout
@@ -43,6 +41,6 @@
                     app:navGraph="@navigation/nav_graph"/>
         </FrameLayout>
 
-    <!--</androidx.constraintlayout.widget.ConstraintLayout>-->
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

@@ -14,14 +14,7 @@
             android:layout_height="@dimen/anchor_point"
             android:background="@drawable/shape_ractangle">
 
-        <ImageView
-                android:id="@+id/dragLeft"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                   android:src="@drawable/ic_chevron_left_black_24dp"
-                   app:layout_constraintStart_toStartOf="parent"
-                   app:layout_constraintTop_toTopOf="parent"
-                   app:layout_constraintBottom_toBottomOf="parent" />
+
         <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/titleNamePurchase"
                 style="@style/title1TextStyle"
@@ -45,7 +38,7 @@
                 app:layout_constraintTop_toTopOf="@+id/titleNamePurchase"
                 app:layout_constraintBottom_toBottomOf="@+id/titleCostPurchase"
                 app:layout_constraintStart_toStartOf="@+id/titleNamePurchase"
-                android:text="@string/item_title_purchase_count"/>
+                android:text="@string/item_title_purchase_brand"/>
 
         <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/titleCostPurchase"
@@ -71,22 +64,22 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="@+id/titleCostPurchase"
                 android:layout_marginStart="@dimen/top_margin"
-                app:layout_constraintEnd_toStartOf="@+id/dragRight"
+                app:layout_constraintEnd_toStartOf="@+id/photo"
                 android:text="@{viewModel.name}"
                 tools:text="name"/>
 
         <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/countPurchase"
+                android:id="@+id/brandPurchase"
                 style="@style/bodyTextStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/top_margin"
-                app:layout_constraintEnd_toStartOf="@+id/dragRight"
+                app:layout_constraintEnd_toStartOf="@+id/photo"
                 app:layout_constraintStart_toStartOf="@id/namePurchase"
                 app:layout_constraintTop_toTopOf="@id/titleNamePurchase"
                 app:layout_constraintBottom_toBottomOf="@+id/titleCostPurchase"
-                android:text="@{viewModel.count}"
-                tools:text="count"/>
+                android:text="@{viewModel.brand}"
+                tools:text="brand"/>
 
         <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/costPurchase"
@@ -94,13 +87,33 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/top_margin"
-                app:layout_constraintEnd_toStartOf="@+id/dragRight"
-                app:layout_constraintStart_toStartOf="@id/countPurchase"
-                app:layout_constraintTop_toBottomOf="@+id/countPurchase"
+                app:layout_constraintEnd_toStartOf="@+id/photo"
+                app:layout_constraintStart_toStartOf="@id/brandPurchase"
+                app:layout_constraintTop_toBottomOf="@+id/brandPurchase"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:text="@{viewModel.cost}"
                 tools:text="cost"/>
 
+        <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/photo"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                srcBase64="@{viewModel.imageBase64}"
+                android:layout_marginEnd="@dimen/top_margin"
+                app:layout_constraintTop_toTopOf="@+id/titleNamePurchase"
+                app:layout_constraintBottom_toBottomOf="@+id/titleCostPurchase"
+                app:layout_constraintEnd_toStartOf="@+id/dragRight"
+                app:layout_constraintStart_toEndOf="@+id/namePurchase"
+                tools:background="@drawable/shape_ractangle"
+               />
+        <ImageView
+                android:id="@+id/dragLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_chevron_left_black_24dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
         <ImageView
                 android:id="@+id/dragRight"
@@ -109,7 +122,7 @@
                 android:src="@drawable/ic_chevron_right_black_24dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
