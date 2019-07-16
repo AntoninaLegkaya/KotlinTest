@@ -24,7 +24,7 @@ class PurchaseDaoTest {
 
     lateinit var testDataBase: AppDataBase
     lateinit var rootRepository: Repository
-    private val PURCHASE = Purchase(0, "testPurchase", 7, 77, "", 0)
+    private val PURCHASE = Purchase(0, "testPurchase", 7, 77, "", 0, "")
     private val BRAND = Brand(0, "brand")
     private lateinit var viewModel: HomeViewModel
 
@@ -56,39 +56,81 @@ class PurchaseDaoTest {
     }
 
     @Test
-    public fun testInsertPurchase() {
+    public fun testInsertNewBrand() {
         //When
-        val brands = rootRepository.insertBrand(BRAND)
+        rootRepository.insertNewBrand(BRAND)
+        val brand = rootRepository.getBrandById(BRAND.id)
 
-        rootRepository.insertBrand(BRAND)
+        val brandObserver = viewModel.DefaultObserver<Brand, ResultQuery<Brand>>()
+            .handleSuccess {
+                assertEquals(0, it.getResult()?.id);
+            }
 
-        val brandsObserver = viewModel.DefaultObserver<Long, ResultQuery<Long>>()
+    }
+
+    @Test
+    fun testgetAllBrands() {
+        //When
+        testInsertNewBrand()
+
+               val brands= rootRepository.getAllBrands()
+
+        val brandsObserver = viewModel.DefaultObserver<List<Brand>, ResultQuery<List<Brand>>>()
             .handleError { }
             .handleSuccess {
-                assertEquals(1, it.getResult()?.toInt());
+                assertEquals(1, it.getResult()?.size);
                 //Then
                 it.getResult()?.let {
-                    PURCHASE.brandId = it
+                    PURCHASE.brandId = it.get(0).id
+                    PURCHASE.brandName=it.get(0).brand
                     rootRepository.insertPurchase(PURCHASE)
+
 
                     val purchaseObserver = viewModel.DefaultObserver<List<Purchase>, ResultQuery<List<Purchase>>>()
                         .handleError { }
                         .handleSuccess { list ->
                             list.getResult()?.size?.let {
                                 assertEquals(true, it > 0)
+                                assertEquals(PURCHASE.brandName, list.getResult()?.get(0)?.brandName);
+                                assertEquals("testPurchase",list.getResult()?.get(0)?.purchase );
                             }
-                            assertEquals(list.getResult()?.get(0)?.localId, PURCHASE.localId);
-                            assertEquals(list.getResult()?.get(0)?.purchase, "testPurchase");
                         }
                     val purchases = rootRepository.getAllPurchase()
                     purchases.observeForever(purchaseObserver)
-
                 }
-
-
             }
         brands.observeForever(brandsObserver)
-
-
     }
 }
+
+//       val brands= rootRepository.getAllBrands()
+//
+//        val brandsObserver = viewModel.DefaultObserver<List<Brand>, ResultQuery<List<Brand>>>()
+//            .handleError { }
+//            .handleSuccess {
+//                assertEquals(0, it.getResult()?.size);
+//                //Then
+//                it.getResult()?.let {
+//                    PURCHASE.brandId = it.get(0).id
+//                    PURCHASE.brandName=it.get(0).brand
+//                    rootRepository.insertPurchase(PURCHASE)
+//
+//                    val purchaseObserver = viewModel.DefaultObserver<List<Purchase>, ResultQuery<List<Purchase>>>()
+//                        .handleError { }
+//                        .handleSuccess { list ->
+//                            list.getResult()?.size?.let {
+//                                assertEquals(true, it > 0)
+//                            }
+//                            assertEquals(list.getResult()?.get(0)?.localId, PURCHASE.localId);
+//                            assertEquals(list.getResult()?.get(0)?.purchase, "testPurchase");
+//                        }
+//                    val purchases = rootRepository.getAllPurchase()
+//                    purchases.observeForever(purchaseObserver)
+//
+//                }
+//
+//
+//            }
+//        brands.observeForever(brandsObserver)
+
+

@@ -12,7 +12,6 @@ interface PurchaseDao {
     @Transaction
     open suspend fun insertPurchaseTransaction(purchase: Purchase) {
         val id= insertPurchaseEntity(purchase)
-        Log.d("devcpp", "************PurchaseDao Insert new Purchase  id: "+ id +" *************** ")
     }
 
     @Transaction

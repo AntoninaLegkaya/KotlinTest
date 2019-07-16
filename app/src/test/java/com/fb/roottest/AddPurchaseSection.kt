@@ -90,7 +90,7 @@ class AddPurchaseSection {
     @Test
     public fun insertNewPurchase() {
         //Given
-        Mockito.`when`(repository.insertPurchase(Purchase(0, purchase1, countValue.toInt(), costValue.toInt(), "", 0)))
+        Mockito.`when`(repository.insertPurchase(Purchase(0, purchase1, countValue.toInt(), costValue.toInt(), "", 0,"")))
             .thenAnswer {
                 return@thenAnswer valueLiveData
             }
@@ -99,27 +99,9 @@ class AddPurchaseSection {
         }
 
         //When
-        viewModel.insertPurchase(Purchase(0, purchase1, countValue.toInt(), costValue.toInt(), "", 0))
+        viewModel.insertPurchase(Purchase(0, purchase1, countValue.toInt(), costValue.toInt(), "", 0, ""))
 
         //Then
-//        if (isCostValid && isCountValid) {
-//            assertEquals(null, viewModel.countInputState.value?.errorMessage)
-//            assertEquals(null, viewModel.costInputState.value?.errorMessage)
-//        } else if (!isCostValid && !isCountValid) {
-//            assertEquals(false, viewModel.validateCost(costValue.toInt()))
-//            assertEquals(false, viewModel.validateCount(countValue.toInt()))
-//        } else if (!isCostValid) {
-//            assertEquals(false, viewModel.validateCost(costValue.toInt()))
-//        } else if (!isCountValid) {
-//            assertEquals(false, viewModel.validateCount(countValue.toInt()))
-//        }
-
-        // 0 0 0
-//        if ( !isCountValid&& !isCostValid && !isBrandValid) {
-//            assertEquals(false, viewModel.validateCost(costValue.toInt()))
-//            assertEquals(false, viewModel.validateCount(countValue.toInt()))
-//            assertEquals(false, viewModel.validateBrand(brandValue))
-//        }
         //0 0 1
         if (!isCountValid && !isCostValid && isBrandValid) {
         }
@@ -148,14 +130,6 @@ class AddPurchaseSection {
             assertEquals(null, viewModel.costInputState.value?.errorMessage)
             assertEquals(null, viewModel.brandInputState.value?.errorMessage)
         }
-//        else
-        // 0 0 0
-//        if ( !isCountValid&& !isCostValid && !isBrandValid)
-//        {
-//            assertEquals(false, viewModel.validateCost(costValue.toInt()))
-//            assertEquals(false, viewModel.validateCount(countValue.toInt()))
-//            assertEquals(false, viewModel.validateBrand(brandValue))
-//        }
 
     }
 
