@@ -2,6 +2,7 @@ package com.fb.roottest.data.repository
 
 import android.util.Log
 import androidx.lifecycle.MediatorLiveData
+import com.commonsware.cwac.saferoom.SQLCipherUtils
 import com.fb.roottest.data.ResultQuery
 import com.fb.roottest.data.db.AppDataBase
 import com.fb.roottest.data.db.Brand
@@ -91,4 +92,9 @@ class RootRepository(val appDataBase: AppDataBase) : Repository, CoroutineScope 
         }
         return result
     }
+
+    override fun closeDataBase() {
+        appDataBase.close()
+    }
+
 }

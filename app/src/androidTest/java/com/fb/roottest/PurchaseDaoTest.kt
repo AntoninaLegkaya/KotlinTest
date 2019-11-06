@@ -60,21 +60,17 @@ class PurchaseDaoTest {
         //When
         rootRepository.insertNewBrand(BRAND)
         val brand = rootRepository.getBrandById(BRAND.id)
-
         val brandObserver = viewModel.DefaultObserver<Brand, ResultQuery<Brand>>()
             .handleSuccess {
                 assertEquals(0, it.getResult()?.id);
             }
-
     }
 
     @Test
-    fun testgetAllBrands() {
+    fun testGetAllBrands() {
         //When
         testInsertNewBrand()
-
                val brands= rootRepository.getAllBrands()
-
         val brandsObserver = viewModel.DefaultObserver<List<Brand>, ResultQuery<List<Brand>>>()
             .handleError { }
             .handleSuccess {
@@ -84,8 +80,6 @@ class PurchaseDaoTest {
                     PURCHASE.brandId = it.get(0).id
                     PURCHASE.brandName=it.get(0).brand
                     rootRepository.insertPurchase(PURCHASE)
-
-
                     val purchaseObserver = viewModel.DefaultObserver<List<Purchase>, ResultQuery<List<Purchase>>>()
                         .handleError { }
                         .handleSuccess { list ->

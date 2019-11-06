@@ -6,16 +6,20 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import com.commonsware.cwac.saferoom.SQLCipherUtils
 import com.fb.roottest.R
 import com.fb.roottest.base.BaseViewModel
+import com.fb.roottest.base.SingleLiveEvent
 import com.fb.roottest.base.combineWith
 import com.fb.roottest.custom.CarouselAdapter
 import com.fb.roottest.data.ResultQuery
 import com.fb.roottest.data.db.Brand
 import com.fb.roottest.data.db.Purchase
 import com.fb.roottest.data.repository.Repository
+import java.lang.System.currentTimeMillis
 
-class HomeViewModel(application: Application, repository: Repository) : BaseViewModel(application, repository) {
+class HomeViewModel(application: Application, repository: Repository) :
+    BaseViewModel(application, repository) {
 
     var isListEmpty = ObservableField<Boolean>(true)
     val _isPurchaseNameValid = MediatorLiveData<Boolean>()
@@ -30,6 +34,10 @@ class HomeViewModel(application: Application, repository: Repository) : BaseView
     lateinit var purchase: Purchase
     lateinit var brand: Brand
     var isObserv: Boolean = false
+    var startTimeField = ObservableField<String>()
+    var stopTimeField = ObservableField<String>()
+    private var startTime = 0L
+    private var count: Int = 0
 
     private val _isInsertButtonEnabled: MutableLiveData<Boolean> =
         _isPurchaseNameValid.combineWith(_isCostPurchaseValid) { nameValid, costValid ->
@@ -56,11 +64,20 @@ class HomeViewModel(application: Application, repository: Repository) : BaseView
     val _brandInputState = MediatorLiveData<TextInputState>()
     val brandInputState: LiveData<TextInputState>
         get() = _brandInputState
+    private val onStartTimerEventMutable = SingleLiveEvent<String>()
+    private val onInsertPurchaseEventMutable = SingleLiveEvent<Int>()
+    val onStartTimerEvent: LiveData<String>
+        get() = onStartTimerEventMutable
+    val onInsertPurchaseEvent: LiveData<Int>
+        get() = onInsertPurchaseEventMutable
+
 
     private var purchaseData: MediatorLiveData<ResultQuery<List<Purchase>>>? = null
     private var brandData: MediatorLiveData<ResultQuery<List<Brand>>>? = null
     private val purchaseObserver = DefaultObserver<List<Purchase>, ResultQuery<List<Purchase>>>()
-        .handleError { applyStatesError() }
+        .handleError {
+            applyStatesError()
+        }
         .handleSuccess {
             it.getResult()?.run {
                 if (this.isEmpty()) {
@@ -107,19 +124,55 @@ class HomeViewModel(application: Application, repository: Repository) : BaseView
 
     private fun insertNewBrand() {
         repository.insertNewBrand(brand)
+        purchase.brandId = brand.id
+        purchase.brandName = brand.brand
+        insertPurchase(purchase)
     }
 
     fun start() {
         getPurchases()
     }
+    fun encryptBd(){
+        repository.closeDataBase()
+    }
+
+
+
+    fun startTimer(proccess: String) {
+        onStartTimerEventMutable.value = proccess
+        startTime = currentTimeMillis()
+        stopTimeField.set(((currentTimeMillis() - startTime) / 1000).toString())
+    }
+
+    fun updateTime() {
+       stopTimeField.set(((currentTimeMillis() -  startTime)/1000).toString())
+    }
+
+    fun updateTimer(value: Long) {
+        stopTimeField.set(value.toString())
+    }
+
 
     fun insertPurchase(purchase: Purchase) {
         if (validateCount(purchase.count) && validateCost(purchase.cost)) {
             repository.insertPurchase(purchase)
         }
+        count++
+        onInsertPurchaseEventMutable.value = count;
     }
 
-    fun insertBrand(brandName: String, namePurchase: String, count: Int, cost: Int, avatarBase64: String) {
+    fun generatedData(i: Int) {
+        count = i
+        insertBrand("brand_", "purchase_" + i, i, 500 * i, "")
+    }
+
+    fun insertBrand(
+        brandName: String,
+        namePurchase: String,
+        count: Int,
+        cost: Int,
+        avatarBase64: String
+    ) {
         purchase = Purchase(0, namePurchase, count, cost, avatarBase64, 0, "")
         brand = Brand(0, brandName)
 

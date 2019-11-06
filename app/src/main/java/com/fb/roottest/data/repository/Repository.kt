@@ -13,4 +13,5 @@ interface Repository {
     fun insertNewBrand(brand: Brand)
     fun getBrandById(id: Long):MediatorLiveData<ResultQuery<Brand>>
     fun getAllBrands():MediatorLiveData<ResultQuery<List<Brand>>>
+    fun closeDataBase()
 }

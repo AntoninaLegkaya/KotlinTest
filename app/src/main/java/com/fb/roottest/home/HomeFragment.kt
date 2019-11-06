@@ -2,6 +2,7 @@ package com.fb.roottest.home
 
 import android.Manifest
 import android.app.Activity.RESULT_OK
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -27,6 +28,7 @@ import com.fb.roottest.R
 import com.fb.roottest.base.BaseFragment
 import com.fb.roottest.base.paralax.BottomSheetBehaviorGoogleMapsLike
 import com.fb.roottest.base.paralax.MergedAppBarBehavior
+import com.fb.roottest.data.repository.RepositoryFactory
 import com.fb.roottest.databinding.FragmentHomeBinding
 import com.fb.roottest.util.observeCommand
 import com.google.android.gms.common.api.CommonStatusCodes
@@ -40,12 +42,21 @@ import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE
 import com.theartofdev.edmodo.cropper.CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE
 import kotlinx.android.synthetic.main.layout_bottom_sheet.view.*
-import java.io.File
-import java.io.IOException
+import java.io.*
+import java.security.SecureRandom
+import javax.crypto.Cipher
+import javax.crypto.SecretKeyFactory
+import javax.crypto.spec.IvParameterSpec
+import javax.crypto.spec.PBEKeySpec
+import javax.crypto.spec.SecretKeySpec
+import kotlin.system.measureTimeMillis
 
-class HomeFragment : BaseFragment<FragmentHomeBinding>(), PurchaseClickListener, CameraKitView.ImageCallback {
-
+class HomeFragment : BaseFragment<FragmentHomeBinding>(), PurchaseClickListener,
+    CameraKitView.ImageCallback {
     companion object {
+        const val SALT = "salt"
+        const val IV = "iv"
+        const val ENCRYPTED = "encrypted"
         const val CAMERA_SCAN_TEXT = 0
         const val LOAD_IMAGE_RESULTS = 1
         const val REQUEST_PERMISSION_CAMERA = 4
@@ -116,8 +127,22 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), PurchaseClickListener,
             observeCommand(isAddedPurchase) {
                 if (it) clearPurchase()
             }
+            observeCommand(onStartTimerEvent) {
+                binding.inputSheet.layoutContent.tv_process.setText(it)
+            }
+            observeCommand(onInsertPurchaseEvent) {
+                binding.viewModel?.updateTime()
+                if (it <= 999) binding.viewModel?.generatedData(it + 1)
+            }
         }
     }
+
+
+    override fun encryptDb() {
+        binding.viewModel?.encryptBd()
+        activity?.let { RepositoryFactory.encryptDataBase(it.applicationContext) }
+    }
+
 
     override fun onNamePurchaseTextChanged(text: String) {
         binding.viewModel?.onNameChanged(text)
@@ -144,9 +169,183 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), PurchaseClickListener,
         // binding.viewModel?.insertData(Purchase(0, purchase, count.toInt(), cost.toInt(), avatarBase64,))
     }
 
+
+    override fun generatedData() {
+        binding.viewModel?.startTimer("Generate data")
+        binding.viewModel?.generatedData(0)
+    }
+
     override fun scanCard() {
         scanTextFromCamera()
 //        binding.camera.captureImage(this)
+    }
+
+    override fun encryptPhoto() {
+        if (binding.bottomSheet.passwordEditText.text.toString().isNotEmpty()) {
+            val photoBytes = getPhotoBytes(Uri.fromFile(File(avatarFile)))
+            val map = encryptBytes(
+                photoBytes,
+                binding.bottomSheet.passwordEditText.text.toString()
+            )
+            saveEncryptedPhotoToSharedPref(map)
+
+            context?.openFileOutput("test.dat", Context.MODE_PRIVATE)?.use {
+                it.write(map.get(ENCRYPTED))
+                it.close()
+            }
+            context?.openFileOutput("map.dat", Context.MODE_PRIVATE)?.use {
+                val oos = ObjectOutputStream(it);
+                oos.writeObject(map)
+                oos.close()
+            }
+            loadImage(binding.bottomSheet.photo, null)
+        } else {
+            Toast.makeText(context, "Enter password for encryption", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun getSharedPhoto() {
+        binding.viewModel?.startTimer("Get encrypt photo from Shared")
+        val map = getEncryptedPhotoFromSharedPref()
+        val timer = measureTimeMillis {
+            if (binding.bottomSheet.passwordEditText.text.toString().isNotEmpty()) {
+                decryptData(map, binding.bottomSheet.passwordEditText.text.toString()).let {
+                    val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
+                    loadImage(binding.bottomSheet.photo, bitmap)
+                }
+            } else {
+                Toast.makeText(context, "Enter password for decryption", Toast.LENGTH_SHORT).show()
+            }
+        }
+        binding.viewModel?.updateTimer(timer)
+    }
+
+    override fun getEncryptPhoto() {
+        binding.viewModel?.startTimer("Get encrypt photo from file")
+        val timer = measureTimeMillis {
+            var restedMap: HashMap<String, ByteArray>? = null
+            //Now time to read the family back into memory
+            ObjectInputStream(FileInputStream(File(context?.filesDir, "map.dat"))).use { it ->
+                //Read the map back from the file
+                restedMap = it.readObject() as HashMap<String, ByteArray>
+            }
+            if (binding.bottomSheet.passwordEditText.text.toString().isNotEmpty()) {
+                restedMap?.let {
+                    val bytes =
+                        decryptData(it, binding.bottomSheet.passwordEditText.text.toString())
+                    loadImage(
+                        binding.bottomSheet.photo,
+                        BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+                    )
+                }
+            } else {
+                Log.d("devcpp", "Decrypt password  empty")
+                Toast.makeText(context, "Enter password for decryption", Toast.LENGTH_SHORT).show()
+            }
+        }
+        binding.viewModel?.updateTimer(timer)
+    }
+
+    private fun saveEncryptedPhotoToSharedPref(map: HashMap<String, ByteArray>) {
+        val editor = context?.getSharedPreferences("prefs", Context.MODE_PRIVATE)?.edit();
+        val keyBase64String = Base64.encodeToString(ENCRYPTED.toByteArray(), Base64.NO_WRAP)
+        val valueBase64String = Base64.encodeToString(map.get(ENCRYPTED), Base64.NO_WRAP)
+        val ivKeyBase64String = Base64.encodeToString(IV.toByteArray(), Base64.NO_WRAP)
+        val ivValueBase64String = Base64.encodeToString(map.get(IV), Base64.NO_WRAP)
+        val saltKeyBase64String = Base64.encodeToString(SALT.toByteArray(), Base64.NO_WRAP)
+        val saltValueBase64String = Base64.encodeToString(map.get(SALT), Base64.NO_WRAP)
+        editor?.let {
+            it.putString(keyBase64String, valueBase64String)
+            it.putString(saltKeyBase64String, saltValueBase64String)
+            it.putString(ivKeyBase64String, ivValueBase64String)
+            it.commit()
+        }
+    }
+
+    private fun getEncryptedPhotoFromSharedPref(): HashMap<String, ByteArray> {
+        val map = HashMap<String, ByteArray>()
+        val preferences = context?.getSharedPreferences("prefs", Context.MODE_PRIVATE)
+        val photoEncryptedString = preferences?.getString(
+            Base64.encodeToString(ENCRYPTED.toByteArray(), Base64.NO_WRAP),
+            "default"
+        )
+        val salt64EncryptedString = preferences?.getString(
+            Base64.encodeToString(SALT.toByteArray(), Base64.NO_WRAP),
+            "default"
+        )
+        val iv64EncryptedString = preferences?.getString(
+            Base64.encodeToString(IV.toByteArray(), Base64.NO_WRAP),
+            "default"
+        )
+        map.put(ENCRYPTED, Base64.decode(photoEncryptedString, Base64.NO_WRAP))
+        map.put(SALT, Base64.decode(salt64EncryptedString, Base64.NO_WRAP))
+        map.put(IV, Base64.decode(iv64EncryptedString, Base64.NO_WRAP))
+        return map
+    }
+
+    private fun encryptBytes(
+        plainTextBytes: ByteArray,
+        passwordString: String
+    ): HashMap<String, ByteArray> {
+        val map = HashMap<String, ByteArray>()
+        try {
+            //Random salt for next step
+            val random = SecureRandom();
+            val salt = ByteArray(256)
+            random.nextBytes(salt)
+
+            // PBKDF2- derive the key from the password, don't use password directly
+            val passwordChar = passwordString.toCharArray()
+            val pbKeySpec = PBEKeySpec(passwordChar, salt, 1324, 256) //1324 -iterations
+            val secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1")
+            val keyBytes = secretKeyFactory.generateSecret(pbKeySpec).encoded
+            val keySpec = SecretKeySpec(keyBytes, "AES")
+
+            //Create initialization vector for AES
+            val ivRandom = SecureRandom()
+            val iv = ByteArray(16)
+            ivRandom.nextBytes(iv)
+            val ivSpec = IvParameterSpec(iv)
+
+            //Encrypt
+            val cipher = Cipher.getInstance("AES/CBC/PKCS7Padding")
+            cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivSpec)
+            val encrypted = cipher.doFinal(plainTextBytes)
+
+            map.put(SALT, salt)
+            map.put(IV, iv)
+            map.put(ENCRYPTED, encrypted)
+        } catch (e: Exception) {
+            Log.e("devcpp", "encryption exception", e);
+        }
+        return map
+    }
+
+    private fun decryptData(map: HashMap<String, ByteArray>, passwordString: String): ByteArray {
+        var decrypted = ByteArray(0)
+        try {
+
+            val salt = map.get(SALT);
+            val iv = map.get(IV);
+            val encrypted = map.get(ENCRYPTED);
+
+            //regenerate key from password
+            val passwordChar = passwordString.toCharArray();
+            val pbKeySpec = PBEKeySpec(passwordChar, salt, 1324, 256);
+            val secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+            val keyBytes = secretKeyFactory.generateSecret(pbKeySpec).getEncoded();
+            val keySpec = SecretKeySpec(keyBytes, "AES");
+
+            //Decrypt
+            val cipher = Cipher.getInstance("AES/CBC/PKCS7Padding");
+            val ivSpec = IvParameterSpec(iv);
+            cipher.init(Cipher.DECRYPT_MODE, keySpec, ivSpec);
+            decrypted = cipher.doFinal(encrypted);
+        } catch (e: Exception) {
+            Log.e("devcpp", "decryption exception", e);
+        }
+
+        return decrypted;
     }
 
     fun onCaptureClicked() {
@@ -178,7 +377,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), PurchaseClickListener,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
                 ) !== PackageManager.PERMISSION_GRANTED
             ) {
-                requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_PERMISSION_STORAGE)
+                requestPermissions(
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    REQUEST_PERMISSION_STORAGE
+                )
             } else {
                 openGallery()
             }
@@ -202,7 +404,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), PurchaseClickListener,
                 val f = createImageFile()
                 avatarFile = f.getAbsolutePath()
                 if (Build.VERSION.SDK_INT >= 24) {
-                    imageCaptureUri = FileProvider.getUriForFile(it, BuildConfig.APPLICATION_ID + ".provider", f)
+                    imageCaptureUri =
+                        FileProvider.getUriForFile(it, BuildConfig.APPLICATION_ID + ".provider", f)
                 } else {
                     imageCaptureUri = Uri.fromFile(f)
                 }
@@ -287,7 +490,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), PurchaseClickListener,
             }
             .addOnFailureListener {
                 Log.e("devcpp", it.toString())
-                Toast.makeText(context, "Sorry, something went wrong! " + it, Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Sorry, something went wrong! " + it, Toast.LENGTH_SHORT)
+                    .show()
             }
     }
 
@@ -358,9 +562,31 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), PurchaseClickListener,
         return result
     }
 
+    private fun getPhotoBytes(uri: Uri): ByteArray {
+        var bytes = ByteArray(0)
+        try {
+            val fileInputStream = requireContext().contentResolver.openInputStream(uri)
+            if (fileInputStream != null) {
+                bytes = IOUtils.toByteArray(fileInputStream)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return bytes
+    }
+
+
     private fun loadImage(imageView: ImageView, url: String?) {
         Glide.with(imageView.context)
             .load(url)
+            .into(imageView)
+    }
+
+    private fun loadImage(imageView: ImageView, bitmap: Bitmap) {
+        Glide.with(imageView.context)
+            .asBitmap()
+            .load(bitmap)
             .into(imageView)
     }
 
@@ -381,4 +607,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), PurchaseClickListener,
             }
         }
     }
+
+
 }

@@ -1,201 +1,333 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:orientation="vertical">
 
     <data>
 
         <variable
                 name="viewModel"
-                type="com.fb.roottest.home.HomeViewModel"/>
-        <variable name="listener" type="com.fb.roottest.home.PurchaseClickListener"/>
+                type="com.fb.roottest.home.HomeViewModel" />
+
+        <variable
+                name="listener"
+                type="com.fb.roottest.home.PurchaseClickListener" />
 
     </data>
+
+
     <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:id="@+id/layout_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/color_white">
 
-
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
-                android:layout_height="720dp">
-            <LinearLayout
-                    android:id="@+id/panel_title"
+                android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/bottom_sheet_peek_height"
-                    android:background="@color/color_bg_main"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="@dimen/top_margin"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toTopOf="@+id/tl_input"
-                    android:gravity="center_vertical|center_horizontal">
-                <TextView
-                        android:layout_gravity="center_vertical"
+                    android:layout_height="match_parent">
+
+                <LinearLayout
+                        android:id="@+id/panel_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/bottom_sheet_peek_height"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="@dimen/top_margin"
+                        android:background="@color/color_bg_main"
+                        android:gravity="center_vertical|center_horizontal"
+                        app:layout_constraintBottom_toTopOf="@+id/tl_input"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:text="@string/home_bottom_sheet_title"
+                            android:textColor="@color/color_white"
+                            android:textSize="20sp" />
+                </LinearLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tl_input"
+                        style="@style/TextInputLayoutAppearance"
+                        inputState="@{viewModel.purchaseInputState}"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/top_margin"
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="@+id/right"
+                        app:layout_constraintStart_toStartOf="@+id/left"
+                        app:layout_constraintTop_toBottomOf="@+id/panel_title">
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/namePurchaseEditText"
+                            style="@style/EditTextPrimary"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:afterTextChanged="@{(s) -> listener.onNamePurchaseTextChanged(s.toString())}"
+                            android:hint="@string/hint_purchase"
+                            android:inputType="text" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tl__count_input"
+                        style="@style/TextInputLayoutAppearance"
+                        inputState="@{viewModel.countInputState}"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/top_margin"
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="@+id/right"
+                        app:layout_constraintStart_toStartOf="@+id/left"
+                        app:layout_constraintTop_toBottomOf="@+id/tl_input">
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/countPurchaseEditText"
+                            style="@style/EditTextPrimary"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:afterTextChanged="@{(s) -> listener.onCountPurchaseTextChanged(s.toString())}"
+                            android:hint="@string/hint_count_purchase"
+                            android:inputType="numberDecimal" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tl__cost_input"
+                        style="@style/TextInputLayoutAppearance"
+                        inputState="@{viewModel.costInputState}"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/top_margin"
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="@+id/right"
+                        app:layout_constraintStart_toStartOf="@+id/left"
+                        app:layout_constraintTop_toBottomOf="@+id/tl__count_input">
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/costPurchaseEditText"
+                            style="@style/EditTextPrimary"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:afterTextChanged="@{(s) -> listener.onCostPurchaseTextChanged(s.toString())}"
+                            android:hint="@string/hint_cost_purchase"
+                            android:inputType="numberDecimal" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tl__brand_input"
+                        style="@style/TextInputLayoutAppearance"
+                        inputState="@{viewModel.brandInputState}"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/top_margin"
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="@+id/right"
+                        app:layout_constraintStart_toStartOf="@+id/left"
+                        app:layout_constraintTop_toBottomOf="@+id/tl__cost_input">
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/brandPurchaseEditText"
+                            style="@style/EditTextPrimary"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:afterTextChanged="@{(s) -> listener.onBrandPurchaseTextChanged(s.toString())}"
+                            android:hint="@string/hint_brand_purchase"
+                            android:inputType="text" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <FrameLayout
+                        android:id="@+id/fl_photo"
+                        android:layout_width="0dp"
+                        android:layout_height="200dp"
+                        android:layout_marginTop="@dimen/top_margin"
+                        android:background="@drawable/shape_ractangle"
+                        android:visibility="visible"
+                        app:layout_constraintEnd_toEndOf="@+id/right"
+                        app:layout_constraintStart_toStartOf="@+id/left"
+                        app:layout_constraintTop_toBottomOf="@+id/panel_title">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/photo"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp" />
+
+                </FrameLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tl__password_input"
+                        style="@style/TextInputLayoutAppearance"
+                        inputState="@{viewModel.costInputState}"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/top_margin"
+                        android:visibility="visible"
+                        app:layout_constraintEnd_toEndOf="@+id/right"
+                        app:layout_constraintStart_toStartOf="@+id/left"
+                        app:layout_constraintTop_toBottomOf="@+id/fl_photo">
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/passwordEditText"
+                            style="@style/EditTextPrimary"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/hint_password_encrypted"
+                            android:inputType="text" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+                <Button
+                        android:id="@+id/btn_get__photo"
                         android:layout_width="wrap_content"
-                        android:text="@string/home_bottom_sheet_title"
-                        android:textColor="@color/color_white"
-                        android:textSize="20sp"/>
-            </LinearLayout>
-            <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tl_input"
-                    android:layout_height="wrap_content"
-                    android:layout_width="0dp"
-                    android:layout_marginTop="@dimen/top_margin"
-                    inputState="@{viewModel.purchaseInputState}"
-                    style="@style/TextInputLayoutAppearance"
-                    app:layout_constraintStart_toStartOf="@+id/left"
-                    app:layout_constraintEnd_toEndOf="@+id/right"
-                    app:layout_constraintTop_toBottomOf="@+id/panel_title">
-                <androidx.appcompat.widget.AppCompatEditText
-                        android:id="@+id/namePurchaseEditText"
-                        style="@style/EditTextPrimary"
-                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:afterTextChanged="@{(s) -> listener.onNamePurchaseTextChanged(s.toString())}"
-                        android:hint="@string/hint_purchase"
-                        android:inputType="text"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_marginTop="@dimen/top_margin_10dp"
+                        android:enabled="true"
+                        android:onClick="@{v->listener.getSharedPhoto()}"
+                        android:text="@string/get_photo"
+                        app:layout_constraintStart_toStartOf="@+id/left"
+                        app:layout_constraintTop_toBottomOf="@+id/tl__password_input" />
 
-
-            <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tl__count_input"
-                    android:layout_height="wrap_content"
-                    android:layout_width="0dp"
-                    android:layout_marginTop="@dimen/top_margin"
-                    style="@style/TextInputLayoutAppearance"
-                    inputState="@{viewModel.countInputState}"
-                    app:layout_constraintStart_toStartOf="@+id/left"
-                    app:layout_constraintEnd_toEndOf="@+id/right"
-                    app:layout_constraintTop_toBottomOf="@+id/tl_input">
-                <androidx.appcompat.widget.AppCompatEditText
-                        android:id="@+id/countPurchaseEditText"
-                        style="@style/EditTextPrimary"
-                        android:layout_width="match_parent"
+                <Button
+                        android:id="@+id/btn_get_encrypt_photo"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:afterTextChanged="@{(s) -> listener.onCountPurchaseTextChanged(s.toString())}"
-                        android:hint="@string/hint_count_purchase"
-                        android:inputType="numberDecimal"/>
+                        android:layout_marginTop="@dimen/top_margin_10dp"
+                        android:enabled="true"
+                        android:onClick="@{v->listener.getEncryptPhoto()}"
+                        android:text="@string/get_encrypt_photo"
 
-            </com.google.android.material.textfield.TextInputLayout>
+                        app:layout_constraintStart_toStartOf="@+id/left"
+                        app:layout_constraintTop_toBottomOf="@+id/btn_get__photo" />
 
-
-            <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tl__cost_input"
-                    android:layout_height="wrap_content"
-                    android:layout_width="0dp"
-                    android:layout_marginTop="@dimen/top_margin"
-                    inputState="@{viewModel.costInputState}"
-                    style="@style/TextInputLayoutAppearance"
-                    app:layout_constraintStart_toStartOf="@+id/left"
-                    app:layout_constraintEnd_toEndOf="@+id/right"
-                    app:layout_constraintTop_toBottomOf="@+id/tl__count_input">
-                <androidx.appcompat.widget.AppCompatEditText
-                        android:id="@+id/costPurchaseEditText"
-                        style="@style/EditTextPrimary"
-                        android:layout_width="match_parent"
+                <Button
+                        android:id="@+id/btn_encrypt_photo"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:afterTextChanged="@{(s) -> listener.onCostPurchaseTextChanged(s.toString())}"
-                        android:hint="@string/hint_cost_purchase"
-                        android:inputType="numberDecimal"/>
+                        android:layout_marginTop="@dimen/top_margin_10dp"
+                        android:enabled="true"
+                        android:onClick="@{v->listener.encryptPhoto()}"
+                        android:text="@string/encrypt_photo"
+                        app:layout_constraintEnd_toEndOf="@+id/right"
+                        app:layout_constraintTop_toBottomOf="@+id/tl__password_input" />
 
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tl__brand_input"
-                    android:layout_height="wrap_content"
-                    android:layout_width="0dp"
-                    android:layout_marginTop="@dimen/top_margin"
-                    inputState="@{viewModel.brandInputState}"
-                    style="@style/TextInputLayoutAppearance"
-                    app:layout_constraintStart_toStartOf="@+id/left"
-                    app:layout_constraintEnd_toEndOf="@+id/right"
-                    app:layout_constraintTop_toBottomOf="@+id/tl__cost_input">
-                <androidx.appcompat.widget.AppCompatEditText
-                        android:id="@+id/brandPurchaseEditText"
-                        style="@style/EditTextPrimary"
-                        android:layout_width="match_parent"
+                <TextView
+                        android:id="@+id/tv_process"
+                        style="@style/title1TextStyle"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:afterTextChanged="@{(s) -> listener.onBrandPurchaseTextChanged(s.toString())}"
-                        android:hint="@string/hint_brand_purchase"
-                        android:inputType="text"/>
+                        android:layout_marginTop="20dp"
+                        app:layout_constraintEnd_toEndOf="@+id/right"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/btn_get_encrypt_photo"
+                        tools:text="Proccess" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+                <TextView
+                        android:id="@+id/tv_start_timer"
+                        style="@style/title1TextStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@drawable/shape_ractangle"
+                        android:text="Timer:"
+                        app:layout_constraintEnd_toStartOf="@+id/tv_stop_timer"
+                        app:layout_constraintStart_toStartOf="@+id/left"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_process"
+                        tools:text="Timer" />
+                <TextView
+                        android:id="@+id/tv_stop_timer"
+                        style="@style/title1TextStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/shape_ractangle"
+                        android:text="@{viewModel.stopTimeField}"
+                        android:textAlignment="center"
+                        app:layout_constraintEnd_toEndOf="@+id/right"
+                        app:layout_constraintStart_toEndOf="@+id/tv_start_timer"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_process"
+                        tools:text="Stop time" />
 
-            <Button
-                    android:id="@+id/btn_add_purchase"
-                    android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tl__brand_input"
-                    android:layout_marginTop="@dimen/top_margin_10dp"
-                    android:onClick="@{v->listener.insertData()}"
-                    android:enabled="@{safeUnbox(viewModel.isInsertButtonEnabled)}"
-                    android:text="@string/purchase_add_button"/>
+                <Button
+                        android:id="@+id/btn_add_purchase"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/top_margin_10dp"
+                        android:enabled="true"
+                        android:onClick="@{v->listener.encryptDb()}"
+                        android:text="@string/encrypt_bd"
 
-            <FrameLayout android:layout_width="0dp" android:layout_height="200dp"
-                         android:background="@drawable/shape_ractangle"
-                         android:layout_marginTop="@dimen/top_margin"
-                         app:layout_constraintStart_toStartOf="@+id/left"
-                         app:layout_constraintEnd_toEndOf="@+id/right"
-                         app:layout_constraintTop_toBottomOf="@+id/btn_add_purchase">
+                        app:layout_constraintStart_toStartOf="@+id/left"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_start_timer" />
+                <Button
+                        android:id="@+id/btn_generate_purchase"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/top_margin_10dp"
+                        android:enabled="true"
+                        android:onClick="@{v->listener.generatedData()}"
+                        android:text="@string/home_bottom_generate_data"
+                        app:layout_constraintEnd_toEndOf="@+id/right"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_stop_timer" />
 
-                <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/photo"
-                        android:layout_width="match_parent"
-                        android:layout_height="200dp"/>
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvList"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/top_margin"
+                        android:adapter="@{viewModel.adapter}"
+                        android:background="@drawable/shape_ractangle"
+                        android:visibility="visible"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:layout_constraintEnd_toEndOf="@+id/right"
+                        app:layout_constraintStart_toStartOf="@+id/left"
+                        app:layout_constraintTop_toBottomOf="@+id/btn_add_purchase">
 
-            </FrameLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvList"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="@dimen/top_margin"
-                    android:adapter="@{viewModel.adapter}"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintStart_toStartOf="@+id/tl_input"
-                    app:layout_constraintEnd_toEndOf="@+id/tl_input"
-                    app:layout_constraintTop_toBottomOf="@+id/btn_add_purchase"
-                    android:visibility="visible">
+                </androidx.recyclerview.widget.RecyclerView>
 
-            </androidx.recyclerview.widget.RecyclerView>
+                <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/left"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_begin="@dimen/guide_line_left" />
 
-            <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/left"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_begin="@dimen/guide_line_left"/>
+                <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/right"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_end="@dimen/guide_line_right" />
 
-            <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/right"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_end="@dimen/guide_line_right"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
 
         <com.google.android.material.bottomappbar.BottomAppBar
+                android:id="@+id/bottom_app_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:fabAlignmentMode="center"
-                android:id="@+id/bottom_app_bar"
                 android:layout_gravity="bottom"
                 android:gravity="center_vertical"
-                android:padding="16dp"
-                app:menu="@menu/menu_scan"
+                android:padding="10dp"
                 app:backgroundTint="@color/colorPrimary"
-        />
+                app:fabAlignmentMode="center"
+                app:menu="@menu/menu_scan" />
+
         <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_notifications_black_24dp"
-                app:layout_anchor="@id/bottom_app_bar"/>
+                app:layout_anchor="@id/bottom_app_bar" />
 
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -16,12 +16,14 @@
     <string name="MergedAppBarLayoutBehavior">com.fb.roottest.base.paralax.MergedAppBarBehavior</string>
     <string name="ScrollAwareFABBehavior">com.fb.roottest.base.paralax.ScrollAwareFABBehavior</string>
     <!--Home Screen-->
+
     <string name="home_bottom_sheet_title">Add Purchase</string>
     <string name="home_bottom_sheet_content">Some content...</string>
     <string name="hint_purchase">Purchase</string>
     <string name="hint_cost_purchase">Purchase cost</string>
     <string name="hint_count_purchase">Count</string>
     <string name="hint_brand_purchase">Brand</string>
+    <string name="hint_password_encrypted">Encrypted password</string>
 
     // Scaner section
     <string name="home_scan_title">Scan card</string>
@@ -34,6 +36,11 @@
     <string name="purchase_count_error_input_state">Wrong purchase count</string>
     <string name="purchase_brand_error_input_state">Wrong purchase brand</string>
     <string name="purchase_add_button">Add purchase</string>
+    <string name="home_bottom_generate_data">Generate data</string>
+    <string name="encrypt_bd">Encrypt BD</string>
+    <string name="encrypt_photo">Encrypt photo</string>
+    <string name="get_encrypt_photo">Photo from file</string>
+    <string name="get_photo">Photo from Shared</string>
     <!--Item Purchase-->
     <string name="item_title_purchase_name">Name</string>
     <string name="item_title_purchase_cost">Cost</string>
